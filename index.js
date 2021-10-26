@@ -47,7 +47,7 @@ async function geniusServer() {
     })
     
 //UPDATE API:
-app.put('services/:id', async(req, res) =>{
+app.put('/services/:id', async(req, res) =>{
     const id = req.params.id;
     const filter = {_id: ObjectId(id)};
     const options = { upsert: true };
@@ -59,9 +59,9 @@ app.put('services/:id', async(req, res) =>{
             img: req.body.img
         },
         };
-console.log(updateServiceDoc)
+// console.log(updateServiceDoc)
 const result = await servicesCollection.updateOne(filter, updateServiceDoc, options);
-console.log(result)
+// console.log(result)
 res.json(result);
 })
 
