@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { MongoClient } = require("mongodb");
-const ObjectId = require('mongodb').ObjectId;
+const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 
 //MIDDLEWARE:
@@ -24,11 +24,11 @@ async function geniusServer() {
     const servicesCollection = database.collection("services");
 
     //GET API:
-    app.get('/services', async(req, res) =>{
-        const cursor = servicesCollection.find({});
-        const services = await cursor.toArray();
-        res.send(services);
-    })
+    app.get("/services", async (req, res) => {
+      const cursor = servicesCollection.find({});
+      const services = await cursor.toArray();
+      res.send(services);
+    });
 
     //POST API:
     app.post("/services", async (req, res) => {
@@ -39,39 +39,43 @@ async function geniusServer() {
     });
 
     //GET API FOR SPECIFIC ID:
-    app.get('/services/:id', async(req, res) =>{
-        const id = req.params.id;
-        const query = {_id: ObjectId(id)};
-        const result = await servicesCollection.findOne(query);
-        res.json(result);
-    })
-    
-//UPDATE API:
-app.put('/services/:id', async(req, res) =>{
-    const id = req.params.id;
-    const filter = {_id: ObjectId(id)};
-    const options = { upsert: true };
-    const updateServiceDoc = {
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await servicesCollection.findOne(query);
+      res.json(result);
+    });
+
+    //UPDATE API:
+    app.put("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateServiceDoc = {
         $set: {
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            img: req.body.img
+          name: req.body.name,
+          description: req.body.description,
+          price: req.body.price,
+          img: req.body.img,
         },
-        };
-// console.log(updateServiceDoc)
-const result = await servicesCollection.updateOne(filter, updateServiceDoc, options);
-// console.log(result)
-res.json(result);
-})
+      };
+      // console.log(updateServiceDoc)
+      const result = await servicesCollection.updateOne(
+        filter,
+        updateServiceDoc,
+        options
+      );
+      // console.log(result)
+      res.json(result);
+    });
 
     //DELETE API:
-    app.delete('/services/:id', async(req, res) =>{
-        const id = req.params.id;
-        const query = {_id: ObjectId(id)};
-        const result = await servicesCollection.deleteOne(query);
-        res.json(result);
-    })
+    app.delete("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await servicesCollection.deleteOne(query);
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
@@ -82,7 +86,7 @@ geniusServer().catch(console.dir);
 const port = 5000;
 
 app.get("/", (req, res) => {
-  res.send("response from server");
+  res.send("response from genius car mechanic server");
 });
 
 app.listen(port, () => {
