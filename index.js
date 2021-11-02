@@ -22,6 +22,7 @@ async function geniusServer() {
 
     const database = client.db("geniusMechanic");
     const servicesCollection = database.collection("services");
+    const cartCollection = database.collection('cart');
 
     //GET API:
     app.get("/services", async (req, res) => {
@@ -37,6 +38,28 @@ async function geniusServer() {
       console.log(result);
       res.json(result);
     });
+
+    //POST TO ORDERS:
+    app.post('/user/cart', async(req, res) =>{
+      const item = req.body;
+      const result = await cartCollection.insertOne(item);
+      res.json(result);
+    })
+
+    //GET ORDERS:
+    app.get('/user/cart', async(req, res) =>{
+      const cursor = cartCollection.find({});
+      const cart = await cursor.toArray();
+      res.send(cart);
+    })
+
+    //DELETE FROM ORDERS:
+    app.delete('/user/cart/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await cartCollection.deleteOne(query);
+      res.json(result);
+    })
 
     //GET API FOR SPECIFIC ID:
     app.get("/services/:id", async (req, res) => {
@@ -69,7 +92,7 @@ async function geniusServer() {
       res.json(result);
     });
 
-    //DELETE API:
+    //DELETE A SERVICE:
     app.delete("/services/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
